@@ -12,6 +12,8 @@ import re
 import nltk
 from nltk.corpus import stopwords
 
+import numpy as np
+from PIL import Image
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 
@@ -63,7 +65,12 @@ custom_stopwords = ['really','even','think','much','still','dont','im','thing','
                     'arent','come','want','something','take','say','stuff','keep','bit','said','find','fan','viewer',
                     'year','play','lol','cant','u','big','well','right','need','least','maybe','sure','many','way',
                     'make','made','one','give','top','theyre','work','things','literally','anymore','day','back','seem',
-                    'see','less','us','last','makes','new','name','reason','pretty','final','going','vs','start']
+                    'see','less','us','last','makes','new','name','reason','pretty','final','going','vs','start',
+                    'great','bad','better','never','used','around','fun','every','trying','years','first','good',
+                    'fucking','best','viewership','viewers','feel','region','regions','hard','mean','number','fans',
+                    'put','part','gets','always','either','numbers','feels','hes','might','saying','definitely',
+                    'absolutely','getting','two','imo','know']
+
 all_stopwords = set(english_stopwords + more_stopwords + custom_stopwords)
 
 # Replace certain words that are unclean with better guess
@@ -74,6 +81,7 @@ def change_word(old_word, new_words):
 
 cleanWords = change_word('world',['worlds'])
 cleanWords = change_word('desk',['analyst','desk'])
+cleanWords = change_word('internationally',['international'])
 cleanWords = change_word('double',['doublelift'])
 cleanWords = change_word('liftlift',['doublelift'])
 cleanWords = change_word('bjergdoublelift', ['bjergsen','doublelift'])
@@ -102,13 +110,18 @@ cleanWords = change_word('capsperkzhumanoidbjergsennisqylarssenjensenpoejizuke',
 # Create single string  of all the words
 all_words = ' '.join(cleanWords)
 
+lcs_color = np.array(Image.open('images/lcs_custom.png'))
+
+
 # Create WordCloud
 wordcloud = WordCloud(width=800,
                       height=800,
                       background_color = 'black',
+                      mask = lcs_color,
                       stopwords = all_stopwords,
                       collocation_threshold = 300,
-                      min_font_size = 20)
+                      min_font_size = 15,
+                      colormap='terrain')
 cloud = wordcloud.generate(all_words)
 
 cloud_counts = wordcloud.process_text(all_words)
@@ -116,10 +129,8 @@ cloud_counts = wordcloud.process_text(all_words)
 # Plot WordCloud
 plt.figure(figsize=(10,10),
            facecolor=None)
-plt.imshow(wordcloud)
 plt.axis('off')
 plt.tight_layout(pad=0)
 plt.show()
 
 wordcloud.to_file('images/lcs_decline_cloud.png')
-
