@@ -69,7 +69,7 @@ custom_stopwords = ['really','even','think','much','still','dont','im','thing','
                     'great','bad','better','never','used','around','fun','every','trying','years','first','good',
                     'fucking','best','viewership','viewers','feel','region','regions','hard','mean','number','fans',
                     'put','part','gets','always','either','numbers','feels','hes','might','saying','definitely',
-                    'absolutely','getting','two','imo','know']
+                    'absolutely','getting','two','imo','know','playing','instead','id','making','next','someone']
 
 all_stopwords = set(english_stopwords + more_stopwords + custom_stopwords)
 
@@ -82,6 +82,8 @@ def change_word(old_word, new_words):
 cleanWords = change_word('world',['worlds'])
 cleanWords = change_word('desk',['analyst','desk'])
 cleanWords = change_word('internationally',['international'])
+cleanWords = change_word('personality',['personalities'])
+cleanWords = change_word('personalites',['personalities'])
 cleanWords = change_word('double',['doublelift'])
 cleanWords = change_word('liftlift',['doublelift'])
 cleanWords = change_word('bjergdoublelift', ['bjergsen','doublelift'])
@@ -112,16 +114,16 @@ all_words = ' '.join(cleanWords)
 
 lcs_color = np.array(Image.open('images/lcs_custom.png'))
 
-
 # Create WordCloud
 wordcloud = WordCloud(width=800,
                       height=800,
                       background_color = 'black',
                       mask = lcs_color,
                       stopwords = all_stopwords,
-                      collocation_threshold = 300,
-                      min_font_size = 15,
-                      colormap='terrain')
+                      collocation_threshold = 400,
+                      min_font_size = 14,
+                      colormap='terrain',
+                      random_state = 7)
 cloud = wordcloud.generate(all_words)
 
 cloud_counts = wordcloud.process_text(all_words)
